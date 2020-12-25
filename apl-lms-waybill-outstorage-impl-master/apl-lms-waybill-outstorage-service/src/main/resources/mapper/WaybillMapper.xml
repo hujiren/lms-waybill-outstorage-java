@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apl.lms.waybill.outstorage.mapper.WaybillMapper">
+
+    <!--关联查询,获取待出货列表-->
+    <select id="getWaitOutstorageList" resultType="com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo">
+        select
+            wb.id,
+            wb.customer_id,
+            wb.partner_id,
+            wb.reference_sn,
+            wb.tracking_sn,
+            wb.dest_country_code,
+            wb.ctns,
+            wb.cargo_type,
+            wb.declare_value,
+            wb.dest_zip_code,
+            wb.commodity_name,
+            wb.commodity_name_en,
+            wb.receiving_time,
+            wbo.out_status,
+            wb.channel_category,
+            wb.channel_name,
+            wbo.out_channel_name,
+            wb.in_actual_weight,
+            wb.in_volume_weight,
+            wb.in_charge_weight,
+            wb.in_volume,
+            wb.volume_divisor,
+            wb.out_charge_weight,
+            wbo.out_actual_weight,
+            wbo.out_volume_weight,
+            wbo.out_volume_divisor,
+            wbo.out_volume,
+            wb.internally_remark
+        from
+            waybill wb
+        left join
+            waybill_outstorage wbo
+        on
+            wb.id = wbo.waybill_id
+        where
+            wbo.out_status = 0
+            and wb.receiving_time > #{receivingTime}
+            <if test="key.partnerId > 0">
+                and wb.partner_id = #{key.partnerId}
+            </if>
+    </select>
+
+
+    <select id="getOutstorageList" resultType="com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo">
+        select
+            wb.id,
+            wb.reference_sn,
+            wb.tracking_sn,
+            wb.partner_id,
+            wb.channel_category,
+            wb.channel_name,
+            wbo.out_channel_name,
+            wbo.out_status,
+            wb.dest_country_code,
+            wb.ctns,
+            wb.out_charge_weight,
+            wb.in_charge_weight,
+            wbo.out_actual_weight,
+            wbo.out_volume_weight,
+            wbo.out_volume_divisor,
+            wbo.out_volume,
+            wb.internally_remark,
+            wb.customer_id,
+            wb.cargo_type,
+            wb.declare_value,
+            wb.dest_zip_code,
+            wb.commodity_name,
+            wb.commodity_name_en,
+            wb.receiving_time,
+            wbo.out_batch_id,
+            wbo.out_batch_sn
+        from
+            waybill wb
+        left join
+            waybill_outstorage wbo
+        on
+            wb.id = wbo.waybill_id
+        where
+            wbo.out_status > 0
+        and timestampdiff(day, wbo.out_time, #{currentTime}) &lt; 7 and wbo.out_batch_sn = #{outBatchSn} and wb.partner_id = #{partnerId}
+    </select>
+
+
+    <!--根据批次号和服务商id批量查询出货单号ids-->
+    <select id="getWaybillIdsBatch" resultType="java.lang.Long">
+        select
+            wb.id
+        from
+            waybill wb
+        left join
+            waybill_outstorage wbo
+        on
+            wb.id = wbo.waybill_id
+        where
+            wbo.partner_id = #{partnerId} and wbo.out_batch_sn = #{outBatchSn}
+    </select>
+
+
+</mapper>

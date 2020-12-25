@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apl.lms.waybill.outstorage.mapper.TransferMapper">
+
+    <!-- 查找详情 2020-12-24-->
+    <select id="getById" resultType="com.apl.lms.waybill.outstorage.pojo.po.TransferPo">
+        SELECT
+          id, 
+          out_batch_id, 
+          create_time, 
+          partner_id, 
+          bag_no, 
+          carrier, 
+          lading_no, 
+          cut_Information_time, 
+          cut_off_time, 
+          estimate_start_time, 
+          actual_start_time, 
+          estimate_arrive_time, 
+          actual_arrive_time, 
+          ctns, 
+          actual_weight, 
+          volume, 
+          volume_weight, 
+          charge_weight, 
+          transfer_status, 
+          remark, 
+          inner_org_id
+        FROM
+          transfer
+        where
+          id = #{id}
+    </select>
+
+    <!-- 查找列表 2020-12-24-->
+    <select id="getList" resultType="com.apl.lms.waybill.outstorage.pojo.po.TransferPo">
+        SELECT
+           id, 
+           out_batch_id, 
+           create_time, 
+           partner_id, 
+           bag_no, 
+           carrier, 
+           lading_no, 
+           cut_Information_time, 
+           cut_off_time, 
+           estimate_start_time, 
+           actual_start_time, 
+           estimate_arrive_time, 
+           actual_arrive_time, 
+           ctns, 
+           actual_weight, 
+           volume, 
+           volume_weight, 
+           charge_weight, 
+           transfer_status, 
+           remark, 
+           inner_org_id
+        FROM
+           transfer
+        where
+        1 = 1
+        order by id desc
+    </select>
+
+
+</mapper>

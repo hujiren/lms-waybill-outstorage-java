@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: apl-lms-waybill-outstorage-app
+
+  profiles:
+    include:
+      common, apl-lms-waybill-outstorage-app
+
+  main:
+    allow-bean-definition-overriding: true
+
