@@ -18,6 +18,7 @@ import com.apl.lms.waybill.outstorage.pojo.dto.waybillWaitSaveDto;
 import com.apl.lms.waybill.outstorage.pojo.po.OutstorageBatchPo;
 import com.apl.lms.waybill.outstorage.pojo.po.WaybillOutstoragePo;
 import com.apl.lms.waybill.outstorage.pojo.po.WaybillPo;
+import com.apl.lms.waybill.outstorage.pojo.vo.WaybillTransferVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.apl.lms.waybill.outstorage.service.OutstorageBatchService;
 import com.apl.lms.waybill.outstorage.service.WaybillOutstorageService;
@@ -398,9 +399,9 @@ public class WaybillServiceImpl implements WaybillService {
      * @param outBatchId
      */
     @Override
-    public WaybillWaitOutstorageInfoVo getOutstorageForTransfer(Long outBatchId) {
+    public WaybillTransferVo getOutstorageForTransfer(Long outBatchId) {
 
-        WaybillWaitOutstorageInfoVo outstorageForTransfer = waybillDao.getOutstorageForTransfer(outBatchId);
+        WaybillTransferVo outstorageForTransfer = waybillDao.getOutstorageForTransfer(outBatchId);
 
         return outstorageForTransfer;
     }

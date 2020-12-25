@@ -61,9 +61,4 @@ public class TransferKeyDto implements Serializable {
         return this.createTime;
     }
 
-    public Integer getTransferStatus(){
-        if(this.transferStatus < 0)
-            this.transferStatus = null;
-        return this.transferStatus;
-    }
 }

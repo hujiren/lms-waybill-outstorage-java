@@ -17,6 +17,7 @@ import com.apl.lms.waybill.outstorage.pojo.dto.TransferKeyDto;
 import com.apl.lms.waybill.outstorage.pojo.dto.TransferAddDto;
 import com.apl.lms.waybill.outstorage.pojo.vo.TransferInfoVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.TransferPageVo;
+import com.apl.lms.waybill.outstorage.pojo.vo.WaybillTransferVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.apl.lms.waybill.outstorage.service.OutstorageBatchService;
 import com.apl.lms.waybill.outstorage.service.TransferService;
@@ -28,6 +29,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.apl.lms.waybill.outstorage.pojo.po.TransferPo;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,9 +100,10 @@ public class TransferServiceImpl implements TransferService {
                         TransferServiceCode.NO_CORRESPONDING_CARGO_INFORMATION_WAS_FOUND.msg);
 
             //根据批次号和服务商id查询详细参数
-            WaybillWaitOutstorageInfoVo outstorageForTransfer = waybillService.getOutstorageForTransfer(outBatchId);
+//            WaybillWaitOutstorageInfoVo outstorageForTransfer = waybillService.getOutstorageForTransfer(outBatchId);
+            WaybillTransferVo waybillTransferVo = waybillService.getOutstorageForTransfer(outBatchId);
 
-            if(null == outstorageForTransfer)
+            if(null == waybillTransferVo)
                 throw new AplException(TransferServiceCode.NO_CORRESPONDING_CARGO_INFORMATION_WAS_FOUND.code,
                         TransferServiceCode.NO_CORRESPONDING_CARGO_INFORMATION_WAS_FOUND.msg);
 
@@ -109,11 +113,11 @@ public class TransferServiceImpl implements TransferService {
             transferPo.setOutBatchId(outBatchId);
             transferPo.setCreateTime(new Timestamp(System.currentTimeMillis()));
             transferPo.setTransferStatus(1);
-            transferPo.setCtns(outstorageForTransfer.getCtns());
-            transferPo.setActualWeight(outstorageForTransfer.getOutActualWeight());
-            transferPo.setVolume(outstorageForTransfer.getOutVolume());
-            transferPo.setVolumeWeight(outstorageForTransfer.getOutVolumeWeight());
-            transferPo.setChargeWeight(outstorageForTransfer.getOutChargeWeight());
+            transferPo.setCtns(waybillTransferVo.getCtns());
+            transferPo.setActualWeight(new BigDecimal(waybillTransferVo.getOutActualWeight()));
+            transferPo.setVolume(new BigDecimal(waybillTransferVo.getOutVolume()));
+            transferPo.setVolumeWeight(new BigDecimal(waybillTransferVo.getOutVolumeWeight()));
+            transferPo.setChargeWeight(new BigDecimal(waybillTransferVo.getOutChargeWeight()));
             transferDao.add(transferPo);
 
         } catch (Exception e) {
@@ -174,7 +178,7 @@ public class TransferServiceImpl implements TransferService {
         } catch (Exception e) {
 
             logger.error(e.getMessage());
-            throw new AplException(CommonStatusCode.DEL_FAIL);
+            return ResultUtil.APPRESULT(e.getMessage(),e.getCause().toString(), false);
 
         }
 

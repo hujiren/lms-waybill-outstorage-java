@@ -3,6 +3,7 @@ package com.apl.lms.waybill.outstorage.mapper;
 import com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo;
 import com.apl.lms.waybill.outstorage.pojo.po.WaybillPo;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillKeyDto;
+import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -47,4 +48,6 @@ public interface WaybillMapper extends BaseMapper<WaybillPo> {
      * @return
      */
     List<Long> getWaybillIdsBatch(@Param("outBatchSn") String outBatchSn, @Param("partnerId") Long partnerId);
+
+
 }

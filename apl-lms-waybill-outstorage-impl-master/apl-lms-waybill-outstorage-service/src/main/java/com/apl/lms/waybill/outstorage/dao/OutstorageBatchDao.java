@@ -146,7 +146,7 @@ public class OutstorageBatchDao extends ServiceImpl<OutstorageBatchMapper, Outst
         String ids = sbId.toString();
 
         StringBuffer sql = new StringBuffer();
-        sql.append("select id, amount, currency, exchange_rate, formula, charge_name, charge_off from apl_fin.accounts_payable where waybill_id in (" + ids + ")");
+        sql.append("select id, waybill_id, amount, currency, exchange_rate, formula, charge_name, charge_off from apl_fin.accounts_payable where waybill_id in (" + ids + ")");
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ids", ids);

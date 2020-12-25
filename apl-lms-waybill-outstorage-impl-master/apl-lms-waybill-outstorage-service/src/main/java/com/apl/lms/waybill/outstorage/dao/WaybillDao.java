@@ -6,6 +6,7 @@ import com.apl.lms.waybill.outstorage.mapper.WaybillMapper;
 import com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillKeyDto;
 import com.apl.lms.waybill.outstorage.pojo.po.WaybillPo;
+import com.apl.lms.waybill.outstorage.pojo.vo.WaybillTransferVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -117,11 +118,12 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
     public List<WaybillWaitOutstorageInfoVo> getInfo2(Long partnerId, String outBatchSn, Long id) {
 
         StringBuffer sql = new StringBuffer();
-        sql.append("select wb.id, wb.reference_sn, wb.tracking_sn, wb.dest_country_code, wbo.out_charge_weight, wb.channel_category, wbo.out_channel_name,");
-        sql.append(" wb.internally_remark, wb.ctns, wb.cargo_type ,wbo.out_status from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo");
+        sql.append("select wb.id, wb.reference_sn, wb.tracking_sn, wb.dest_country_code, wb.channel_category, wb.internally_remark, wb.ctns, wb.cargo_type,");
+        sql.append("  wbo.out_channel_name, wbo.out_status, wbo.out_charge_weight");
+        sql.append("  from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo");
         sql.append(" on wb.id = wbo.waybill_id where wbo.out_batch_id = " + id);
         if(null != partnerId && partnerId > 0)
-            sql.append(" and wb.partner_id = " + partnerId);
+            sql.append(" and wbo.partner_id = " + partnerId);
         if(StringUtils.isNotBlank(outBatchSn))
             sql.append(" and wbo.out_batch_sn = :outBatchSn");
         sql.append(" and wb.inner_org_id = {tenantValue}");
@@ -132,6 +134,7 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
 
         List<WaybillWaitOutstorageInfoVo> waybillWaitOutstorageInfoVoList = adbHelper.queryList2(sql.toString(), paramMap, WaybillWaitOutstorageInfoVo.class);
 
+
         return waybillWaitOutstorageInfoVoList;
     }
 
@@ -139,14 +142,15 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
      * 查询装袋接口参数
      * @param outBatchId
      */
-    public WaybillWaitOutstorageInfoVo getOutstorageForTransfer(Long outBatchId) {
+    public WaybillTransferVo getOutstorageForTransfer(Long outBatchId) {
 
         StringBuffer sql = new StringBuffer();
-        sql.append("select count(wb.ctns) as ctns, count(wbo.out_actual_weight) as out_actual_weight, count(wbo.out_volume) as out_volume, count(wbo.out_volume_weight) as out_volume_weight,");
-        sql.append("  count(wbo.out_charge_weight) as out_charge_weight, from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo");
+        sql.append("select sum(wb.ctns) as ctns, sum(wbo.out_actual_weight) as out_actual_weight, sum(wbo.out_volume) as out_volume, sum(wbo.out_volume_weight) as out_volume_weight,");
+        sql.append("  sum(wbo.out_charge_weight) as out_charge_weight from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo");
         sql.append(" on wb.id = wbo.waybill_id where wbo.out_batch_id = " + outBatchId);
+        sql.append(" and wbo.inner_org_id = {tenantValue}");
 
-        WaybillWaitOutstorageInfoVo waybillWaitOutstorageInfoVo = adbHelper.queryObj(sql.toString(), null, WaybillWaitOutstorageInfoVo.class);
+        WaybillTransferVo waybillWaitOutstorageInfoVo = adbHelper.queryObj(sql.toString(), null, WaybillTransferVo.class);
 
         return waybillWaitOutstorageInfoVo;
     }

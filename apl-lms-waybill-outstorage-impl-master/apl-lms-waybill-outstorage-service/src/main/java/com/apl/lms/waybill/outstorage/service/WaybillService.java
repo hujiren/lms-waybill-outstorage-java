@@ -4,6 +4,7 @@ import com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillSaveDto;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillKeyDto;
 import com.apl.lms.waybill.outstorage.pojo.dto.waybillWaitSaveDto;
+import com.apl.lms.waybill.outstorage.pojo.vo.WaybillTransferVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.apl.lib.utils.ResultUtil;
 
@@ -87,5 +88,5 @@ public interface WaybillService {
      * 查询装袋接口参数
      * @param outBatchId
      */
-    WaybillWaitOutstorageInfoVo getOutstorageForTransfer(Long outBatchId);
+    WaybillTransferVo getOutstorageForTransfer(Long outBatchId);
 }

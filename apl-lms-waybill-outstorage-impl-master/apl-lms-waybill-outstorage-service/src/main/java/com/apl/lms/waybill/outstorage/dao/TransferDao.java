@@ -45,8 +45,7 @@ public class TransferDao extends ServiceImpl<TransferMapper, TransferPo> {
     }
 
     public Integer delById(Long id) throws Exception {
-
-        Integer resultNum = adbHelper.delById("apl_lms_outstorage.transfer", id);
+        Integer resultNum = adbHelper.update("delete from apl_lms_outstorage.transfer where id = " + id);
         return resultNum;
     }
 
@@ -67,12 +66,12 @@ public class TransferDao extends ServiceImpl<TransferMapper, TransferPo> {
         StringBuffer sql = new StringBuffer();
         sql.append("select id, out_batch_id, create_time, partner_id, bag_no, lading_no, cut_off_time, charge_weight, transfer_status from apl_lms_outstorage.transfer");
         sql.append(" where create_time > :createTime");
-        if(keyDto.getPartnerId() > 0)
+        if(null != keyDto && keyDto.getPartnerId() > 0)
             sql.append(" and partner_id = " + keyDto.getPartnerId());
-        if(null != keyDto.getTransferStatus())
+        if(null != keyDto && null != keyDto.getTransferStatus())
             sql.append(" and transfer_status = " + keyDto.getTransferStatus());
-        if(null != keyDto.getSn())
-            sql.append(" and (FIND_IN_SET(bag_no, :sn) or FIND_IN_SET(lading_no, :sn))");
+        if(null != keyDto && null != keyDto.getSn())
+            sql.append(" and (bag_no like CONCAT('%', :sn, '%') or lading_no like CONCAT('%', :sn, '%'))");
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("createTime", createTime);

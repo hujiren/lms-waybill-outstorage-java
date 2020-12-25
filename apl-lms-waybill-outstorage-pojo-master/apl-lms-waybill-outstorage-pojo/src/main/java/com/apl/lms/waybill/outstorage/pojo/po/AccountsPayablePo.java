@@ -23,26 +23,20 @@ public class AccountsPayablePo implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @ApiModelProperty(name = "recordingTime", value = "记录时间")
-    private Timestamp recordingTime;
-
-    @ApiModelProperty(name = "relatedId", value = "往来单位id")
-    private Long relatedId;
-
     @ApiModelProperty(name = "waybillId", value = "运单id")
     private Long waybillId;
-
-    @ApiModelProperty(name = "chargeCode", value = "费用code")
-    private Integer chargeCode;
-
-    @ApiModelProperty(name = "chargeName", value = "费用名称")
-    private String chargeName;
 
     @ApiModelProperty(name = "amount", value = "金额")
     private Double amount;
 
     @ApiModelProperty(name = "currency", value = "币制")
     private String currency;
+
+    @ApiModelProperty(name = "chargeCode", value = "费用code")
+    private Integer chargeCode;
+
+    @ApiModelProperty(name = "chargeName", value = "费用名称")
+    private String chargeName;
 
     @ApiModelProperty(name = "exchangeRate", value = "汇率")
     private Double exchangeRate;
@@ -64,5 +58,11 @@ public class AccountsPayablePo implements Serializable {
 
     @ApiModelProperty(name = "chargeOff", value = "销账金额")
     private Long chargeOff;
+
+    @ApiModelProperty(name = "recordingTime", value = "记录时间")
+    private Timestamp recordingTime;
+
+    @ApiModelProperty(name = "relatedId", value = "往来单位id")
+    private Long relatedId;
 
 }

@@ -55,7 +55,7 @@ public class WaybillPayableCombBo implements Serializable {
     private Integer ctns;
 
     @ApiModelProperty(name = "declareValue", value = "申报价值")
-    private BigDecimal declareValue;
+    private Double declareValue;
 
     @ApiModelProperty(name = "destZipCode" , value = "收件人邮编")
     private String destZipCode;
@@ -76,28 +76,28 @@ public class WaybillPayableCombBo implements Serializable {
     private String outChannelName;
 
     @ApiModelProperty(name = "inActualWeight" , value = "收货实重")
-    private BigDecimal inActualWeight;
+    private Double inActualWeight;
 
     @ApiModelProperty(name = "inVolumeWeight" , value = "收货体积重")
-    private BigDecimal inVolumeWeight;
+    private Double inVolumeWeight;
 
     @ApiModelProperty(name = "inChargeWeight" , value = "收货计费重")
-    private BigDecimal inChargeWeight;
+    private Double inChargeWeight;
 
     @ApiModelProperty(name = "cargoType" , value = "入包裹类型")
     private String cargoType;
 
     @ApiModelProperty(name = "outActualWeight" , value = "出货实重")
-    private BigDecimal outActualWeight;
+    private Double outActualWeight;
 
     @ApiModelProperty(name = "outVolumeWeight" , value = "出货体积重")
-    private BigDecimal outVolumeWeight;
+    private Double outVolumeWeight;
 
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "outVolume" , value = "出货体积")
-    private BigDecimal outVolume;
+    private Double outVolume;
 
     @ApiModelProperty(name = "commodityNameEn" , value = "英文品名")
     private String commodityNameEn;
