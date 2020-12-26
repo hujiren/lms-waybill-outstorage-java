@@ -1,6 +1,5 @@
 package com.apl.lms.waybill.outstorage.pojo.po;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -52,7 +51,7 @@ public class OutstorageBatchPo extends Model<OutstorageBatchPo> implements Seria
     private Integer poll;
 
     @ApiModelProperty(name = "weight", value = "重量")
-    private BigDecimal weight;
+    private Double weight;
 
     @ApiModelProperty(name = "outStatus", value = "出货状态  1加入出货列表 2已出货")
     private Integer outStatus;

@@ -8,6 +8,7 @@ import com.apl.lms.waybill.outstorage.pojo.vo.WaybillTransferVo;
 import com.apl.lms.waybill.outstorage.pojo.vo.WaybillWaitOutstorageInfoVo;
 import com.apl.lib.utils.ResultUtil;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -89,4 +90,11 @@ public interface WaybillService {
      * @param outBatchId
      */
     WaybillTransferVo getOutstorageForTransfer(Long outBatchId);
+
+    /**
+     * 导出出货信息报表
+     * @param response
+     * @param waybillIds
+     */
+    void exportWaybillStorage(HttpServletResponse response, String waybillIds);
 }

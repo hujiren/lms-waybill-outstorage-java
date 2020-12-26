@@ -1,5 +1,6 @@
 package com.apl.lms.waybill.outstorage.app.controller;
 
+import com.apl.lib.utils.StringUtil;
 import com.apl.lms.waybill.outstorage.pojo.bo.WaybillOutstorageBo;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillOutstorageDto;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillSaveDto;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillKeyDto;
 import com.apl.lib.utils.ResultUtil;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -128,4 +130,14 @@ public class WaybillController {
         return resultUtil;
     }
 
+
+    @GetMapping(value = "/export-waybill-outstorage-excel")
+    @ApiOperation(value = "导出出货信息报表", notes = "导出出货信息报表")
+    public void exportWaybillStorage(HttpServletResponse response,
+                                   @NotBlank(message = "id不能为空") String ids) {
+
+        List<Long> waybillIds =  StringUtil.stringToLongList(ids);
+        waybillService.exportWaybillStorage(response, ids);
+
+    }
 }

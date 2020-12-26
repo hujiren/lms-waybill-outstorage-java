@@ -1,20 +1,12 @@
 package com.apl.lms.waybill.outstorage.pojo.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.validation.MessageInterpolator;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -62,7 +54,7 @@ public class WaybillPo extends Model<WaybillPo> implements Serializable {
     private Integer ctns;
 
     @ApiModelProperty(name = "declareValue", value = "申报价值")
-    private BigDecimal declareValue;
+    private Double declareValue;
 
     @ApiModelProperty(name = "destZipCode" , value = "收件人邮编")
     private String destZipCode;
@@ -83,19 +75,19 @@ public class WaybillPo extends Model<WaybillPo> implements Serializable {
     private String channelName;
 
     @ApiModelProperty(name = "inActualWeight" , value = "收货实重")
-    private BigDecimal inActualWeight;
+    private Double inActualWeight;
 
     @ApiModelProperty(name = "inVolumeWeight" , value = "收货体积重")
-    private BigDecimal inVolumeWeight;
+    private Double inVolumeWeight;
 
     @ApiModelProperty(name = "inChargeWeight" , value = "收货计费重")
-    private BigDecimal inChargeWeight;
+    private Double inChargeWeight;
 
     @ApiModelProperty(name = "cargoType" , value = "入包裹类型")
     private String cargoType;
 
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "internallyRemark" , value = "内部备注")
     private String internallyRemark;

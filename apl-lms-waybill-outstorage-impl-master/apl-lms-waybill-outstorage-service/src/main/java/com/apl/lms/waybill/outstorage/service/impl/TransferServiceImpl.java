@@ -29,8 +29,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.apl.lms.waybill.outstorage.pojo.po.TransferPo;
-
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,10 +112,10 @@ public class TransferServiceImpl implements TransferService {
             transferPo.setCreateTime(new Timestamp(System.currentTimeMillis()));
             transferPo.setTransferStatus(1);
             transferPo.setCtns(waybillTransferVo.getCtns());
-            transferPo.setActualWeight(new BigDecimal(waybillTransferVo.getOutActualWeight()));
-            transferPo.setVolume(new BigDecimal(waybillTransferVo.getOutVolume()));
-            transferPo.setVolumeWeight(new BigDecimal(waybillTransferVo.getOutVolumeWeight()));
-            transferPo.setChargeWeight(new BigDecimal(waybillTransferVo.getOutChargeWeight()));
+            transferPo.setActualWeight(new Double(waybillTransferVo.getOutActualWeight()));
+            transferPo.setVolume(new Double(waybillTransferVo.getOutVolume()));
+            transferPo.setVolumeWeight(new Double(waybillTransferVo.getOutVolumeWeight()));
+            transferPo.setChargeWeight(new Double(waybillTransferVo.getOutChargeWeight()));
             transferDao.add(transferPo);
 
         } catch (Exception e) {

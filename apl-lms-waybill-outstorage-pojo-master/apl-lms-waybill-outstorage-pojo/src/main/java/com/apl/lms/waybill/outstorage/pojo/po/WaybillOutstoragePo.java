@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.Min;
 import com.baomidou.mybatisplus.annotation.TableName;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import lombok.Data;
 
@@ -46,16 +43,16 @@ public class WaybillOutstoragePo extends Model<WaybillOutstoragePo> implements S
     private String outChannelName;
 
     @ApiModelProperty(name = "outActualWeight" , value = "出货实重")
-    private BigDecimal outActualWeight;
+    private Double outActualWeight;
 
     @ApiModelProperty(name = "outVolume" , value = "出货体积")
-    private BigDecimal outVolume;
+    private Double outVolume;
 
     @ApiModelProperty(name = "outVolumeWeight" , value = "出货体积重")
-    private BigDecimal outVolumeWeight;
+    private Double outVolumeWeight;
 
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "outVolumeDivisor" , value = "出货体积除数")
     private Integer outVolumeDivisor;

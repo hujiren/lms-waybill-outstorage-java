@@ -1,5 +1,7 @@
 package com.apl.lms.waybill.outstorage.service.impl;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.apl.cache.AplCacheHelper;
 import com.apl.lib.exception.AplException;
 import com.apl.lib.join.JoinBase;
@@ -26,19 +28,23 @@ import com.apl.lms.waybill.outstorage.service.WaybillService;
 import com.apl.sys.lib.cache.JoinCustomer;
 import com.apl.sys.lib.feign.InnerFeign;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.util.Times;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.apl.lib.constants.CommonStatusCode;
 import com.apl.lms.waybill.outstorage.pojo.dto.WaybillKeyDto;
 import org.springframework.transaction.annotation.Transactional;
-import java.math.BigDecimal;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -59,8 +65,9 @@ public class WaybillServiceImpl implements WaybillService {
             OUT_STORAGE_SUCCESS("OUT_STORAGE_SUCCESS", "出货成功!"),
             OUT_STORAGE_FAILED("OUT_STORAGE_FAILED", "出货失败!"),
             CANCEL_STORAGE_SUCCESS("CANCEL_STORAGE_SUCCESS", "取消成功!"),
-            CANCEL_STORAGE_FAILED("CANCEL_STORAGE_FAILED", "取消失败!"),
             WAYBILL_ID_QUERY_FAILED("WAYBILL_ID_QUERY_FAILED", "出货运单查询失败"),
+            NO_VALID_FILE_WAS_FOUND("NO_VALID_FILE_WAS_FOUND", "没有找到有效文件"),
+            TEMPLATE_DOES_NOT_EXIST("Template does not exist", "模板不存在"),
             NO_CORRESPONDING_DATA("NO_CORRESPONDING_DATA", "没有对应数据");
 
             private String code;
@@ -72,7 +79,7 @@ public class WaybillServiceImpl implements WaybillService {
             }
         }
 
-    static final Logger LOGGER = LoggerFactory.getLogger(WaybillServiceImpl.class);
+    static final Logger logger = LoggerFactory.getLogger(WaybillServiceImpl.class);
 
     @Autowired
     WaybillDao waybillDao;
@@ -101,6 +108,11 @@ public class WaybillServiceImpl implements WaybillService {
 
     JoinFieldInfo joinCustomerFieldInfo = null;
 
+    @Value("${lms.waybill-outstorage.template-file-name:}")
+    String templateFileName;
+
+    @Value("${lms.waybill-outstorage.out-file-name:}")
+    String outFileName;
 
     /**
      * 获取未加入出货列表的数据
@@ -178,7 +190,7 @@ public class WaybillServiceImpl implements WaybillService {
 
         try {
             Timestamp outTime = new Timestamp(System.currentTimeMillis());
-            BigDecimal weightSum = new BigDecimal(0.000);
+            Double weightSum = new Double(0.000);
 
             OutstorageBatchPo outstorageBatchPo = new OutstorageBatchPo();
             outstorageBatchPo.setOutTime(outTime);
@@ -188,7 +200,7 @@ public class WaybillServiceImpl implements WaybillService {
 
             //重量统计
             for (WaybillOutstorageDto waybillOutstorageDto : waybillSaveDto.getWaybillOutstorageList()) {
-                weightSum = weightSum.add(waybillOutstorageDto.getInChargeWeight());
+                weightSum += waybillOutstorageDto.getInChargeWeight();
             }
             outstorageBatchPo.setWeight(weightSum);
             outstorageBatchPo.setOutStatus(1);
@@ -217,7 +229,7 @@ public class WaybillServiceImpl implements WaybillService {
             waybillOutstorageService.saveBatchWaybillOutstorage(waybillOutstoragePoList, waybillIds);
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw new AplException(CommonStatusCode.SAVE_FAIL.code, CommonStatusCode.SAVE_FAIL.msg);
         }
 
@@ -244,7 +256,7 @@ public class WaybillServiceImpl implements WaybillService {
             waybillOutstorageService.updateOutStatusByIds(waybillIds, null , 0);
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            logger.error(e.getMessage());
             throw e;
         }
 
@@ -278,7 +290,7 @@ public class WaybillServiceImpl implements WaybillService {
             waybillOutstorageService.updateOutStatusByIds(waybillIds, newOutTime, 2);
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw new AplException(WaybillServiceCode.OUT_STORAGE_FAILED.code, WaybillServiceCode.OUT_STORAGE_FAILED.msg);
         }
 
@@ -310,7 +322,7 @@ public class WaybillServiceImpl implements WaybillService {
             waybillWaitOutstorageInfoVo = waybillWaitOutstorageInfoVoList.get(0);
 
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw new AplException(CommonStatusCode.GET_FAIL, null);
         }
 
@@ -387,7 +399,7 @@ public class WaybillServiceImpl implements WaybillService {
             waybillDao.updById(waybillPo);
             waybillOutstorageService.updById(waybillOutstoragePo);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw  new AplException(CommonStatusCode.SAVE_FAIL);
         }
 
@@ -405,4 +417,67 @@ public class WaybillServiceImpl implements WaybillService {
 
         return outstorageForTransfer;
     }
+
+
+    /**
+     * 导出出货信息报表
+     * @param response
+     * @param waybillIds
+     */
+    @Override
+    public void exportWaybillStorage(HttpServletResponse response, String waybillIds) {
+
+        if (null == templateFileName || templateFileName.length() < 2) {
+            throw new AplException(WaybillServiceCode.NO_VALID_FILE_WAS_FOUND.code, WaybillServiceCode.NO_VALID_FILE_WAS_FOUND.msg, null);
+        }
+
+        //注意 使用swagger 会导致各种问题，请直接用浏览器或者用postman
+        response.setCharacterEncoding("utf-8");
+        ExcelWriter excelWriter = null;
+        String newTempFileName = null;
+
+        try {
+            //关联获取出货详细信息
+            List<WaybillWaitOutstorageInfoVo> waybillVoList = waybillDao.getInfo3(waybillIds);
+            if(waybillVoList.size() < 1)
+                throw new AplException(WaybillServiceCode.NO_CORRESPONDING_DATA.code, WaybillServiceCode.NO_CORRESPONDING_DATA.msg);
+
+            //关联缓存
+            associatedCacheField(waybillVoList);
+
+            //取出批次号
+            String outBatchSn = waybillVoList.get(0).getOutBatchSn();
+
+            String templateNameByOutBatchSn = templateFileName.replace("template", outBatchSn);
+            File templateFile = new File(templateNameByOutBatchSn);
+            if (!templateFile.exists()) {
+                throw new AplException(WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.code, WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.msg, null);
+            }
+
+            //返回上一级目录, 即不带文件名的全路径, 构建临时文件全路径
+            newTempFileName = templateFile.getParent() + "/export-waybill-outstorage-" + UUID.randomUUID() + ".xlsx";
+            FileInputStream fs = new FileInputStream(templateNameByOutBatchSn);
+            XSSFWorkbook wb = new XSSFWorkbook(fs);
+            wb.setSheetName(0, outBatchSn);
+
+            //输出临时模板文件
+            FileOutputStream fileOut = new FileOutputStream(newTempFileName);
+            wb.write(fileOut);
+            fileOut.close();
+
+            excelWriter = EasyExcel.write(response.getOutputStream()).withTemplate(newTempFileName).build();
+
+            String sheetName = null;
+            int wayBillTemplateSheetIndex = 0;
+            int numberOfSheets = wb.getNumberOfSheets();
+            if(numberOfSheets < 1)
+                throw new AplException(WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.code, WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.msg, null);
+
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new AplException(e.getMessage(), e.getCause().toString());
+        }
+    }
+
 }

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author hjr start
@@ -33,20 +32,20 @@ public class WaybillOutstorageDto implements Serializable {
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重" , required = true)
     @NotNull(message = "出货计费重不能为空")
     @DecimalMin(value = "0" , message = "出货计费重不合法")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "outActualWeight" , value = "出货实重", required = true)
     @DecimalMin(value = "0" , message = "出货实重不合法")
     @NotNull(message = "出货实重不能为空")
-    private BigDecimal outActualWeight;
+    private Double outActualWeight;
 
     @ApiModelProperty(name = "outVolumeWeight" , value = "出货体积重", required = true)
     @DecimalMin(value = "0" , message = "出货体积重不合法")
     @NotNull(message = "出货体积重不能为空")
-    private BigDecimal outVolumeWeight;
+    private Double outVolumeWeight;
 
     @ApiModelProperty(name = "outVolume" , value = "出货体积")
-    private BigDecimal outVolume;
+    private Double outVolume;
 
     @ApiModelProperty(name = "outVolumeDivisor" , value = "出货体积除数" , required = true)
     @NotNull(message = "出货体积除数不能为空")
@@ -57,7 +56,7 @@ public class WaybillOutstorageDto implements Serializable {
     @ApiModelProperty(name = "inChargeWeight" , value = "收货计费重" , required = true)
     @NotNull(message = "收货计费重不能为空")
     @DecimalMin(value = "0", message = "收货计费重不合法")
-    private BigDecimal inChargeWeight;
+    private Double inChargeWeight;
 
     @ApiModelProperty(name = "outStatus" , value = "出货状态")
     private Integer outStatus;

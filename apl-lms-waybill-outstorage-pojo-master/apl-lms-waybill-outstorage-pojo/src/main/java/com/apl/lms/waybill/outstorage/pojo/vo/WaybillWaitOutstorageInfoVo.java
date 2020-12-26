@@ -6,7 +6,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -24,6 +23,9 @@ public class WaybillWaitOutstorageInfoVo implements Serializable {
 
     @ApiModelProperty(name = "outBatchId" , value = "批次id")
     private Long outBatchId;
+
+    @ApiModelProperty(name = "outBatchSn" , value = "批次号")
+    private String outBatchSn;
 
     @ApiModelProperty(name = "referenceSn" , value = "参考单号 原单号 ：客户单号 运单号")
     private String referenceSn;
@@ -56,7 +58,7 @@ public class WaybillWaitOutstorageInfoVo implements Serializable {
     private Integer ctns;
 
     @ApiModelProperty(name = "declareValue", value = "申报价值")
-    private BigDecimal declareValue;
+    private Double declareValue;
 
     @ApiModelProperty(name = "destZipCode" , value = "邮编")
     private String destZipCode;

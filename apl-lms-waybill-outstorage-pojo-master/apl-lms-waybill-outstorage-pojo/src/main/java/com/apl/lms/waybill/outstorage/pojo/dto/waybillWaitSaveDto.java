@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author hjr start
@@ -47,7 +46,7 @@ public class waybillWaitSaveDto implements Serializable {
     @ApiModelProperty(name = "declareValue", value = "申报价值", required = true)
     @DecimalMin(value = "0", message = "申报价值不合法")
     @NotNull(message = "申报价值不能为空")
-    private BigDecimal declareValue;
+    private Double declareValue;
 
     @ApiModelProperty(name = "destZipCode" , value = "邮编", required = true)
     @NotBlank(message = "邮编不能为空")
@@ -78,13 +77,13 @@ public class waybillWaitSaveDto implements Serializable {
     private String outChannelName;
 
     @ApiModelProperty(name = "inActualWeight" , value = "收货实重")
-    private BigDecimal inActualWeight;
+    private Double inActualWeight;
 
     @ApiModelProperty(name = "inVolumeWeight" , value = "收货体积重")
-    private BigDecimal inVolumeWeight;
+    private Double inVolumeWeight;
 
     @ApiModelProperty(name = "inChargeWeight" , value = "收货计费重")
-    private BigDecimal inChargeWeight;
+    private Double inChargeWeight;
 
     @ApiModelProperty(name = "cargoType" , value = "入包裹类型")
     private String cargoType;
@@ -92,17 +91,17 @@ public class waybillWaitSaveDto implements Serializable {
     @ApiModelProperty(name = "outActualWeight" , value = "出货实重", required = true)
     @DecimalMin(value = "0", message = "出货实重不合法")
     @NotNull(message = "出货实重不能为空")
-    private BigDecimal outActualWeight;
+    private Double outActualWeight;
 
     @ApiModelProperty(name = "outVolumeWeight" , value = "出货体积重", required = true)
     @DecimalMin(value = "0", message = "出货体积重不合法")
     @NotNull(message = "出货体积重不能为空")
-    private BigDecimal outVolumeWeight;
+    private Double outVolumeWeight;
 
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重", required = true)
     @DecimalMin(value = "0", message = "出货计费重不合法")
     @NotNull(message = "出货计费重不能为空")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "internallyRemark" , value = "内部备注")
     private String internallyRemark;

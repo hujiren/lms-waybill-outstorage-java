@@ -138,6 +138,7 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
         return waybillWaitOutstorageInfoVoList;
     }
 
+
     /**
      * 查询装袋接口参数
      * @param outBatchId
@@ -153,5 +154,22 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
         WaybillTransferVo waybillWaitOutstorageInfoVo = adbHelper.queryObj(sql.toString(), null, WaybillTransferVo.class);
 
         return waybillWaitOutstorageInfoVo;
+    }
+
+
+    /**
+     * 导出出货信息报表
+     * @param waybillIds
+     * @return
+     */
+    public List<WaybillWaitOutstorageInfoVo> getInfo3(String waybillIds) {
+
+        StringBuffer sql = new StringBuffer();
+        sql.append("select wb.reference_sn, wb.tracking_sn, wb.partner_id, wb.customer_id, wb.channel_category, wb.dest_country_code, wb.cargo_type, wb.ctns,");
+        sql.append("  wb.commodity_name, wb.internally_remark, wbo.out_channel_name, wbo.out_actual_weight, wbo.out_volume_weight, wbo.out_charge_weight, wbo.out_batch_sn");
+        sql.append(" from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo on wb.id = wbo.waybill_id where wb.id in (" + waybillIds + ")");
+
+        List<WaybillWaitOutstorageInfoVo> waybillWaitOutstorageInfoVoList = adbHelper.queryList(sql.toString(), null, WaybillWaitOutstorageInfoVo.class);
+        return waybillWaitOutstorageInfoVoList;
     }
 }

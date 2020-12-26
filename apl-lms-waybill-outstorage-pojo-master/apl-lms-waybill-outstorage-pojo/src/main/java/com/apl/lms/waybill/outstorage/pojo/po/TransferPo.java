@@ -1,23 +1,17 @@
 package com.apl.lms.waybill.outstorage.pojo.po;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Min;
 import com.baomidou.mybatisplus.annotation.TableName;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -79,16 +73,16 @@ public class TransferPo extends Model<TransferPo> {
     private Integer ctns;
 
     @ApiModelProperty(name = "actualWeight" , value = "实重")
-    private BigDecimal actualWeight;
+    private Double actualWeight;
 
     @ApiModelProperty(name = "volume" , value = "体积")
-    private BigDecimal volume;
+    private Double volume;
 
     @ApiModelProperty(name = "volumeWeight" , value = "体积重")
-    private BigDecimal volumeWeight;
+    private Double volumeWeight;
 
     @ApiModelProperty(name = "chargeWeight" , value = "计费重")
-    private BigDecimal chargeWeight;
+    private Double chargeWeight;
 
     @ApiModelProperty(name = "transferStatus" , value = "转运状态")
     private Integer transferStatus;

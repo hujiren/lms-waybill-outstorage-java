@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -69,16 +68,16 @@ public class TransferInfoVo extends Model<TransferInfoVo> {
     private Integer ctns;
 
     @ApiModelProperty(name = "actualWeight" , value = "实重")
-    private BigDecimal actualWeight;
+    private Double actualWeight;
 
     @ApiModelProperty(name = "volume" , value = "体积")
-    private BigDecimal volume;
+    private Double volume;
 
     @ApiModelProperty(name = "volumeWeight" , value = "体积重")
-    private BigDecimal volumeWeight;
+    private Double volumeWeight;
 
     @ApiModelProperty(name = "chargeWeight" , value = "计费重  01")
-    private BigDecimal chargeWeight;
+    private Double chargeWeight;
 
     @ApiModelProperty(name = "transferStatus" , value = "转运状态")
     private Boolean transferStatus;

@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -67,31 +65,31 @@ public class WaybillOutstorageBo implements Serializable {
     private Integer ctns;
 
     @ApiModelProperty(name = "inActualWeight" , value = "收货实重")
-    private BigDecimal inActualWeight;
+    private Double inActualWeight;
 
     @ApiModelProperty(name = "inChargeWeight" , value = "收货计费重")
-    private BigDecimal inChargeWeight;
+    private Double inChargeWeight;
 
     @ApiModelProperty(name = "inVolumeWeight" , value = "收货体积重")
-    private BigDecimal inVolumeWeight;
+    private Double inVolumeWeight;
 
     @ApiModelProperty(name = "inVolume" , value = "收货体积")
-    private BigDecimal inVolume;
+    private Double inVolume;
 
     @ApiModelProperty(name = "volumeDivisor" , value = "收货体积除数")
     private Integer volumeDivisor;
 
     @ApiModelProperty(name = "outChargeWeight" , value = "出货计费重")
-    private BigDecimal outChargeWeight;
+    private Double outChargeWeight;
 
     @ApiModelProperty(name = "outActualWeight" , value = "出货实重")
-    private BigDecimal outActualWeight;
+    private Double outActualWeight;
 
     @ApiModelProperty(name = "outVolumeWeight" , value = "出货体积重")
-    private BigDecimal outVolumeWeight;
+    private Double outVolumeWeight;
 
     @ApiModelProperty(name = "outVolume" , value = "出货体积")
-    private BigDecimal outVolume;
+    private Double outVolume;
 
     @ApiModelProperty(name = "outVolumeDivisor" , value = "出货体积除数")
     private Integer outVolumeDivisor;
@@ -106,7 +104,7 @@ public class WaybillOutstorageBo implements Serializable {
     private String cargoType;
 
     @ApiModelProperty(name = "declareValue" , value = "总申报价值")
-    private BigDecimal declareValue;
+    private Double declareValue;
 
     @ApiModelProperty(name = "destZipCode" , value = "收件人邮编")
     private String destZipCode;
