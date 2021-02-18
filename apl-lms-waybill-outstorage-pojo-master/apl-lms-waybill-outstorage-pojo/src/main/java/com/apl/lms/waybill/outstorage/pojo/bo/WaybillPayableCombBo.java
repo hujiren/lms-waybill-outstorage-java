@@ -135,14 +135,11 @@ public class WaybillPayableCombBo implements Serializable {
     @ApiModelProperty(name = "exchangeRate", value = "汇率")
     private Double exchangeRate;
 
-    @ApiModelProperty(name = "priceName", value = "报价表名称")
-    private String priceName;
-
     @ApiModelProperty(name = "formula", value = "计算公式")
     private String formula;
 
-    @ApiModelProperty(name = "remark", value = "备注")
-    private String remark;
+    @ApiModelProperty(name = "chargeRemark", value = "费用备注")
+    private String chargeRemark;
 
     @ApiModelProperty(name = "auditing", value = "审核")
     private Integer auditing;

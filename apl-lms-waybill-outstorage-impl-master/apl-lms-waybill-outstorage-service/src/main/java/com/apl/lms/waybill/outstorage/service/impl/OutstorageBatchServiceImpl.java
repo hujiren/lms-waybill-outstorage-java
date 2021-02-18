@@ -138,7 +138,8 @@ public class OutstorageBatchServiceImpl implements OutstorageBatchService {
             AdbPageVo<OutstorageBatchPo> outstorageBatchPoAdbPageVo = outstorageBatchDao.getList(pageDto, keyDto);
 
             if(outstorageBatchPoAdbPageVo.getList().size() < 1)
-                return ResultUtil.APPRESULT(CommonStatusCode.GET_SUCCESS, outstorageBatchPageVo);
+                return ResultUtil.APPRESULT(OutstorageBatchServiceImplCode.NO_CORRESPONDING_DATA.code,
+                        OutstorageBatchServiceImplCode.NO_CORRESPONDING_DATA.msg,outstorageBatchPageVo);
 
             outstorageBatchPoList = outstorageBatchPoAdbPageVo.getList();
 

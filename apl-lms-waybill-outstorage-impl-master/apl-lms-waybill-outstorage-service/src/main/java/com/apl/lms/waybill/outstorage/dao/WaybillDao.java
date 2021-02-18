@@ -168,8 +168,8 @@ public class WaybillDao extends ServiceImpl<WaybillMapper, WaybillPo> {
         sql.append("select wb.reference_sn, wb.tracking_sn, wb.partner_id, wb.customer_id, wb.channel_category, wb.dest_country_code, wb.cargo_type, wb.ctns,");
         sql.append("  wb.commodity_name, wb.internally_remark, wbo.out_channel_name, wbo.out_actual_weight, wbo.out_volume_weight, wbo.out_charge_weight, wbo.out_batch_sn");
         sql.append(" from apl_lms_waybill.waybill wb left join apl_lms_waybill.waybill_outstorage wbo on wb.id = wbo.waybill_id where wb.id in (" + waybillIds + ")");
-
-        List<WaybillWaitOutstorageInfoVo> waybillWaitOutstorageInfoVoList = adbHelper.queryList(sql.toString(), null, WaybillWaitOutstorageInfoVo.class);
+        sql.append(" and wb.inner_org_id = {tenantValue}");
+        List<WaybillWaitOutstorageInfoVo> waybillWaitOutstorageInfoVoList = adbHelper.queryList2(sql.toString(), null, WaybillWaitOutstorageInfoVo.class);
         return waybillWaitOutstorageInfoVoList;
     }
 }

@@ -2,6 +2,7 @@ package com.apl.lms.waybill.outstorage.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.apl.cache.AplCacheHelper;
 import com.apl.lib.exception.AplException;
 import com.apl.lib.join.JoinBase;
@@ -41,10 +42,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -468,15 +468,67 @@ public class WaybillServiceImpl implements WaybillService {
             excelWriter = EasyExcel.write(response.getOutputStream()).withTemplate(newTempFileName).build();
 
             String sheetName = null;
+
             int wayBillTemplateSheetIndex = 0;
             int numberOfSheets = wb.getNumberOfSheets();
             if(numberOfSheets < 1)
                 throw new AplException(WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.code, WaybillServiceCode.TEMPLATE_DOES_NOT_EXIST.msg, null);
 
+            for(int i = 0; i < numberOfSheets; i++){
+                sheetName = wb.getSheetAt(i).getSheetName();
+                if(sheetName.contains(outBatchSn))
+                    wayBillTemplateSheetIndex = i;
+            }
+
+            WriteSheet wayBillSheet = EasyExcel.writerSheet(wayBillTemplateSheetIndex).build();
+            wayBillSheet.setSheetName(outBatchSn);
+
+            List<Map<String, Object>> waybillOutstorageFillList = new ArrayList<>();
+            Map<String, Object> rowMap = null;
+            for (WaybillWaitOutstorageInfoVo waybillVo : waybillVoList) {
+                int i = 1;
+                rowMap = new HashMap<>();
+                rowMap.put("num", i);
+                rowMap.put("referenceSn", waybillVo.getReferenceSn());
+                rowMap.put("trackingSn", waybillVo.getTrackingSn());
+                rowMap.put("customerName", waybillVo.getCustomerName());
+                rowMap.put("channelCategory", waybillVo.getChannelCategory());
+                rowMap.put("countryNameCn", waybillVo.getCountryNameCn());
+                rowMap.put("cargoType", waybillVo.getCargoType());
+                rowMap.put("outActualWeight", waybillVo.getOutActualWeight());
+                rowMap.put("outVolumeWeight", waybillVo.getOutVolumeWeight());
+                rowMap.put("outChargeWeight", waybillVo.getOutChargeWeight());
+                rowMap.put("partnerName", waybillVo.getPartnerName());
+                rowMap.put("outChannelName", waybillVo.getOutChannelName());
+                rowMap.put("ctns", waybillVo.getCtns());
+                rowMap.put("commodityName", waybillVo.getCommodityName());
+                rowMap.put("internallyRemark", waybillVo.getInternallyRemark());
+                waybillOutstorageFillList.add(rowMap);
+                i++;
+            }
+            excelWriter.fill(waybillOutstorageFillList, wayBillSheet);
+
+            //web导出
+            outFileName = outFileName.replace("template", outBatchSn);
+            response.setContentType("application/vnd.ms-excel");
+            outFileName = URLEncoder.encode(outFileName, "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + outFileName);
 
         } catch (Exception e) {
+
             logger.error(e.getMessage());
             throw new AplException(e.getMessage(), e.getCause().toString());
+
+        }finally {
+
+            if(null!=newTempFileName) {
+                File delFile = new File(newTempFileName);
+                delFile.delete();
+            }
+
+            if (null != excelWriter) {
+                excelWriter.finish();
+            }
         }
     }
 
